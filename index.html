@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>WOLF LABS | Teacher Showcase</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700;900&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Nunito:wght@400;700;900&family=Plus+Jakarta+Sans:wght@700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        /* === THEME ENGINE VARIABLES === */
+        :root {
+            /* Lobby Default */
+            --bg-base: #050505;
+            --bg-panel: #121212;
+            --primary: #555555;
+            --secondary: #888888;
+            --error: #ef4444;
+            --text-main: #FFFFFF;
+            --font-main: 'Inter', sans-serif;
+            --font-title: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body.theme-faith {
+            --bg-base: #0a0a0a;
+            --bg-panel: #1a0f0f;
+            --primary: #D4AF37; /* Sacred Gold */
+            --secondary: #722F37; /* Burgundy */
+            --font-main: 'Inter', sans-serif;
+            --font-title: 'Playfair Display', serif;
+        }
+
+        body.theme-neuro {
+            --bg-base: #090c15;
+            --bg-panel: #13182b;
+            --primary: #00d2ff; /* Brain Cyan */
+            --secondary: #9d4edd; /* Memory Purple */
+            --font-main: 'Nunito', sans-serif;
+            --font-title: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body.theme-exec {
+            --bg-base: #0A0A0A;
+            --bg-panel: #1A1A1A;
+            --primary: #E62B1E; /* TED Red */
+            --secondary: #FFFFFF;
+            --font-main: 'Inter', sans-serif;
+            --font-title: 'Inter', sans-serif;
+        }
+
+        body { 
+            font-family: var(--font-main); 
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            overflow: hidden;
+            transition: background-color 0.5s ease;
+        }
+
+        h1, h2, h3, .title-font { font-family: var(--font-title); }
+
+        /* GIANT SAMPLE WATERMARK */
+        .giant-watermark {
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) rotate(-25deg);
+            font-size: 20vw;
+            font-weight: 900;
+            color: rgba(255, 255, 255, 0.04);
+            z-index: 0;
+            pointer-events: none;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            white-space: nowrap;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .top-watermark {
+            position: fixed; top: 16px; left: 50%; transform: translateX(-50%);
+            background: #f59e0b; color: #000; font-weight: 900; text-transform: uppercase;
+            letter-spacing: 0.1em; font-size: 10px; padding: 6px 20px; border-radius: 500px;
+            z-index: 6000; pointer-events: none; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+        }
+
+        /* DYNAMIC CLASSES */
+        .color-primary { color: var(--primary); }
+        .bg-primary { background-color: var(--primary); }
+        .border-primary { border-color: var(--primary); }
+        
+        /* UI COMPONENTS */
+        .glass-panel {
+            background-color: var(--bg-panel);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 20px; padding: 2rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 10;
+        }
+
+        .btn-action {
+            background-color: var(--primary); color: #000; border-radius: 50px;
+            font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em;
+            padding: 1rem 3rem; transition: all 0.2s ease; border: none; cursor: pointer;
+            display: inline-block; font-family: var(--font-main);
+        }
+        .btn-action:hover { filter: brightness(1.2); transform: translateY(-2px); box-shadow: 0 5px 20px rgba(0,0,0,0.4); }
+        .btn-action:active { transform: scale(0.96); }
+
+        .btn-secondary {
+            background-color: transparent; border: 2px solid var(--primary); color: var(--primary);
+            border-radius: 50px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em;
+            padding: 1rem 3rem; transition: all 0.2s ease; cursor: pointer;
+        }
+        .btn-secondary:hover { background-color: rgba(255,255,255,0.05); }
+
+        /* LOBBY CARDS */
+        .lobby-card {
+            background: var(--bg-panel); border: 1px solid rgba(255,255,255,0.1); border-radius: 24px;
+            padding: 2rem; cursor: pointer; transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            position: relative; overflow: hidden; display: flex; flex-direction: column; z-index: 10;
+        }
+        .lobby-card:hover { transform: translateY(-10px); border-color: var(--primary); box-shadow: 0 20px 40px rgba(0,0,0,0.6); }
+        .lobby-card .badge { position: absolute; top: 1.5rem; right: 1.5rem; font-size: 0.7rem; font-weight: 800; padding: 0.4rem 1rem; border-radius: 500px; text-transform: uppercase; letter-spacing: 0.1em;}
+        
+        .lobby-card.card-a1:hover { --primary: #D4AF37; }
+        .lobby-card.card-a2:hover { --primary: #00d2ff; }
+        .lobby-card.card-b2:hover { --primary: #E62B1E; }
+
+        /* THEME SPECIFIC ORNAMENTS (WOLFAITH) */
+        .theme-faith-only { display: none; pointer-events: none; }
+        body.theme-faith .theme-faith-only { display: block; }
+        
+        .leather-overlay {
+            position: fixed; inset: 0; background-image: url("https://www.transparenttextures.com/patterns/dark-leather.png");
+            opacity: 0.25; mix-blend-mode: overlay; z-index: 1;
+        }
+        .gold-foil-frame {
+            position: fixed; inset: 12px; z-index: 50; border: 2px solid rgba(212, 175, 55, 0.2);
+            outline: 1px solid rgba(212, 175, 55, 0.1); outline-offset: 4px;
+        }
+        .gold-foil-frame::before, .gold-foil-frame::after {
+            content: ''; position: absolute; width: 6px; height: 6px; background: #D4AF37;
+        }
+        .gold-foil-frame::before { top: -4px; left: -4px; box-shadow: calc(100vw - 32px) 0 0 #D4AF37; }
+        .gold-foil-frame::after { bottom: -4px; left: -4px; box-shadow: calc(100vw - 32px) 0 0 #D4AF37; }
+        .ribbon-bookmark {
+            position: fixed; top: -10px; right: 8%; width: 40px; height: 180px;
+            background: linear-gradient(to bottom, #4a1922, #8a2a3b); z-index: 60; transform: rotate(2deg);
+            box-shadow: -4px 10px 15px rgba(0,0,0,0.8); clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 85%, 0 100%);
+        }
+
+        /* MINIGAMES */
+        .mcq-row { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; padding: 1.5rem; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; }
+        .mcq-row:hover:not(.locked) { background: rgba(255,255,255,0.08); transform: translateX(5px); }
+        .mcq-row.correct { background: rgba(255,255,255,0.1); border-color: var(--primary); color: var(--primary); }
+        .mcq-row.wrong { background: rgba(239, 68, 68, 0.1); border-color: var(--error); color: var(--error); }
+
+        .slider-input { -webkit-appearance: none; width: 100%; background: transparent; }
+        .slider-input::-webkit-slider-runnable-track { width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 10px; cursor: pointer; }
+        .slider-input::-webkit-slider-thumb { -webkit-appearance: none; height: 30px; width: 30px; border-radius: 50%; background: var(--primary); cursor: pointer; margin-top: -12px; transition: transform 0.2s; }
+        .slider-input::-webkit-slider-thumb:hover { transform: scale(1.2); }
+
+        .flip-card { perspective: 1000px; cursor: pointer; height: 300px; }
+        .flip-card-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); transform-style: preserve-3d; }
+        .flip-card.flipped .flip-card-inner { transform: rotateY(180deg); }
+        .flip-card-front, .flip-card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 2rem; border-radius: 24px; background: var(--bg-panel); border: 1px solid rgba(255,255,255,0.1); }
+        .flip-card-back { transform: rotateY(180deg); background: var(--primary); color: #000; }
+
+        .bug-word { color: var(--error); border-bottom: 2px dashed var(--error); cursor: pointer; font-weight: bold; transition: all 0.2s; padding: 0 4px; }
+        .bug-word:hover { background: rgba(239, 68, 68, 0.1); }
+        .bug-fixed { color: var(--primary); pointer-events: none; font-weight: bold; border-bottom: 2px solid var(--primary); }
+
+        /* NAV CONSOLE */
+        #nav-console {
+            position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); width: calc(100% - 48px); max-width: 900px;
+            background: rgba(0,0,0,0.9); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1); border-radius: 100px;
+            padding: 12px 30px; z-index: 5000; display: flex; justify-content: space-between; align-items: center;
+        }
+
+        /* ANIMATIONS */
+        .fade-in { animation: fadeIn 0.5s ease forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .shake { animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both; }
+        @keyframes shake { 10%, 90% { transform: translate3d(-2px, 0, 0); } 20%, 80% { transform: translate3d(3px, 0, 0); } 30%, 50%, 70% { transform: translate3d(-5px, 0, 0); } 40%, 60% { transform: translate3d(5px, 0, 0); } }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 10px; }
+        #confetti-canvas { position: fixed; inset: 0; pointer-events: none; z-index: 9999; }
+    </style>
+</head>
+<body class="flex flex-col h-screen overflow-hidden text-sm">
+
+    <div class="top-watermark">⚠️ Teacher Demo - Preview Only ⚠️</div>
+    <div class="giant-watermark">SAMPLE</div>
+    <canvas id="confetti-canvas"></canvas>
+
+    <!-- THEME ORNAMENTS -->
+    <div class="theme-faith-only leather-overlay"></div>
+    <div class="theme-faith-only gold-foil-frame"></div>
+    <div class="theme-faith-only ribbon-bookmark"></div>
+
+    <!-- === LOBBY (DASHBOARD) === -->
+    <main id="lobby-screen" class="flex-grow flex flex-col items-center justify-center relative px-8 z-10 w-full h-full overflow-y-auto py-20">
+        <div class="max-w-6xl w-full flex flex-col items-center space-y-12 animate-in fade-in z-10">
+            <div class="text-center space-y-4">
+                <p class="text-gray-400 font-bold text-xs tracking-[0.4em] uppercase">Teacher Portal</p>
+                <h1 class="text-5xl md:text-7xl font-black text-white leading-none tracking-tighter title-font">WOLF LABS <br>SHOWCASE</h1>
+                <p class="text-lg text-gray-400 max-w-2xl mx-auto">Experiencie a revolução no design de aulas de inglês. Escolha um módulo abaixo para testar o ambiente interativo.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 w-full mt-10">
+                <!-- A1 Lesson (Faith) -->
+                <div class="lobby-card card-a1" onclick="initLesson('A1')">
+                    <div class="badge bg-[#D4AF37]/20 text-[#D4AF37] border border-[#D4AF37]/30">Level A1</div>
+                    <div class="w-16 h-16 rounded-2xl bg-[#D4AF37]/10 text-[#D4AF37] flex items-center justify-center text-3xl mb-6 border border-[#D4AF37]/20"><i class="fas fa-cross"></i></div>
+                    <h3 class="text-2xl font-black text-white title-font mb-2">Wolfaith Engine</h3>
+                    <p class="text-gray-400 text-sm mb-6 flex-grow">Can/Could/Will. Design clássico, focado em discussões teológicas com estética de Bíblia premium.</p>
+                    <div class="pt-4 border-t border-white/10 flex justify-between items-center text-xs font-bold text-gray-500 uppercase tracking-widest">
+                        <span>6 Slides</span>
+                        <span class="text-[#D4AF37]">Play Demo <i class="fas fa-arrow-right ml-1"></i></span>
+                    </div>
+                </div>
+
+                <!-- A2 Lesson (Neuro) -->
+                <div class="lobby-card card-a2" onclick="initLesson('A2')">
+                    <div class="badge bg-[#00d2ff]/20 text-[#00d2ff] border border-[#00d2ff]/30">Level A2</div>
+                    <div class="w-16 h-16 rounded-2xl bg-[#00d2ff]/10 text-[#00d2ff] flex items-center justify-center text-3xl mb-6 border border-[#00d2ff]/20"><i class="fas fa-brain"></i></div>
+                    <h3 class="text-2xl font-black text-white title-font mb-2">The Sleep Clinic</h3>
+                    <p class="text-gray-400 text-sm mb-6 flex-grow">Zero Conditional. Baseado num reportagem médica. Design clínico focado em neurociência e saúde.</p>
+                    <div class="pt-4 border-t border-white/10 flex justify-between items-center text-xs font-bold text-gray-500 uppercase tracking-widest">
+                        <span>6 Slides</span>
+                        <span class="text-[#00d2ff]">Play Demo <i class="fas fa-arrow-right ml-1"></i></span>
+                    </div>
+                </div>
+
+                <!-- B2 Lesson (Exec) -->
+                <div class="lobby-card card-b2" onclick="initLesson('B2')">
+                    <div class="badge bg-[#E62B1E]/20 text-[#E62B1E] border border-[#E62B1E]/30">Level B2</div>
+                    <div class="w-16 h-16 rounded-2xl bg-[#E62B1E]/10 text-[#E62B1E] flex items-center justify-center text-3xl mb-6 border border-[#E62B1E]/20"><i class="fas fa-bullseye"></i></div>
+                    <h3 class="text-2xl font-black text-white title-font mb-2">The Executive Suite</h3>
+                    <p class="text-gray-400 text-sm mb-6 flex-grow">Past Modals. TED Talk de Liderança. Design corporativo premium para alunos de negócios (Business).</p>
+                    <div class="pt-4 border-t border-white/10 flex justify-between items-center text-xs font-bold text-gray-500 uppercase tracking-widest">
+                        <span>6 Slides</span>
+                        <span class="text-[#E62B1E]">Play Demo <i class="fas fa-arrow-right ml-1"></i></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- === LESSON ARENA === -->
+    <main id="lesson-screen" class="hidden flex-grow flex-col overflow-hidden relative z-10">
+        <div id="lesson-content" class="flex-grow overflow-y-auto px-6 py-20 flex flex-col items-center w-full"></div>
+    </main>
+
+    <!-- CONSOLA DE NAVEGAÇÃO -->
+    <footer id="nav-console" class="hidden">
+        <div class="flex items-center gap-6 w-1/4">
+            <button onclick="returnToLobby()" class="text-gray-400 hover:text-white transition-colors" title="Sair da Demo"><i class="fas fa-power-off text-xl"></i></button>
+            <div class="flex flex-col">
+                <span id="c-title" class="text-[12px] font-black text-white uppercase tracking-widest truncate title-font">WOLF LABS</span>
+                <span id="c-type" class="text-[8px] font-bold color-primary uppercase tracking-widest">TEACHER DEMO</span>
+            </div>
+        </div>
+        <div class="flex flex-col items-center gap-3 w-1/2">
+            <div class="flex items-center gap-10">
+                <button onclick="prevStep()" class="text-white/30 hover:text-white transition-colors"><i class="fas fa-chevron-left text-xl"></i></button>
+                <div class="w-48 h-1.5 bg-white/10 rounded-full overflow-hidden">
+                    <div id="progress-bar" class="h-full bg-primary transition-all duration-300" style="width: 0%;"></div>
+                </div>
+                <button onclick="nextStep()" class="text-white hover:text-white transition-colors"><i class="fas fa-chevron-right text-xl"></i></button>
+            </div>
+        </div>
+        <div class="flex items-center justify-end gap-6 w-1/4">
+            <span class="text-[10px] font-bold text-gray-500 uppercase tracking-widest hidden md:inline">Preview Mode</span>
+        </div>
+    </footer>
+
+    <!-- SCRIPT ENGINE -->
+    <script>
+        // --- APP STATE ---
+        let currentLesson = null;
+        let currentStep = 0;
+
+        const TYPES = { COVER: "Cover", WARMUP: "Warm Up", VIDEO: "Media", GRAMMAR: "Grammar", SPEAKING: "Speaking", CTA: "End of Demo" };
+
+        const esc = (s) => s ? s.replace(/'/g, "\\'").replace(/"/g, "&quot;") : "";
+
+        // --- THEME SWITCHER ---
+        function setTheme(theme) {
+            document.body.className = `flex flex-col h-screen overflow-hidden text-sm theme-${theme}`;
+        }
+
+        function returnToLobby() {
+            setTheme('default');
+            document.getElementById('lesson-screen').classList.add('hidden');
+            document.getElementById('nav-console').classList.add('hidden');
+            document.getElementById('lobby-screen').classList.remove('hidden');
+            document.getElementById('lobby-screen').classList.add('flex');
+            currentLesson = null; currentStep = 0;
+            const iframes = document.querySelectorAll('iframe');
+            iframes.forEach(iframe => iframe.src = iframe.src); // Stop videos
+        }
+
+        function initLesson(level) {
+            currentStep = 0;
+            if (level === 'A1') { setTheme('faith'); currentLesson = lessonFaith; }
+            if (level === 'A2') { setTheme('neuro'); currentLesson = lessonNeuro; }
+            if (level === 'B2') { setTheme('exec'); currentLesson = lessonExec; }
+            
+            document.getElementById('lobby-screen').classList.add('hidden');
+            document.getElementById('lobby-screen').classList.remove('flex');
+            document.getElementById('lesson-screen').classList.remove('hidden');
+            document.getElementById('lesson-screen').classList.add('flex');
+            document.getElementById('nav-console').classList.remove('hidden');
+            
+            renderStep();
+        }
+
+        // --- RENDER LOGIC ---
+        function renderStep() {
+            const stepData = currentLesson.data[currentStep];
+            const contentDiv = document.getElementById('lesson-content');
+            contentDiv.innerHTML = `<div class="w-full max-w-6xl mx-auto">${stepData.html}</div>`;
+            
+            // Update Nav
+            document.getElementById('c-title').innerText = currentLesson.title;
+            const prog = document.getElementById('progress-bar');
+            prog.style.width = `${((currentStep + 1) / currentLesson.data.length) * 100}%`;
+        }
+
+        function nextStep() {
+            if (currentStep < currentLesson.data.length - 1) { currentStep++; renderStep(); }
+        }
+        function prevStep() {
+            if (currentStep > 0) { currentStep--; renderStep(); }
+        }
+
+        // --- TEMPLATE GENERATORS ---
+
+        const tCover = (title, subtitle, badge, icon = "fa-play") => `
+            <div class="flex flex-col items-center justify-center min-h-[70vh] text-center space-y-8 animate-in fade-in">
+                <div class="w-24 h-24 rounded-[2rem] bg-primary/20 flex items-center justify-center text-primary text-4xl mb-4 border border-primary/30 shadow-[0_0_40px_rgba(0,0,0,0.5)]">
+                    <i class="fas ${icon}"></i>
+                </div>
+                <div class="space-y-4">
+                    <p class="color-primary font-bold text-xs tracking-[0.4em] uppercase">${badge}</p>
+                    <h1 class="text-6xl md:text-8xl font-black text-white leading-none tracking-tighter title-font uppercase ${document.body.classList.contains('theme-faith') ? 'italic' : ''}">${title}</h1>
+                    <p class="text-xl text-gray-400 mt-4 max-w-2xl mx-auto">${subtitle}</p>
+                </div>
+                <button onclick="nextStep()" class="mt-12 btn-action text-lg shadow-[0_0_20px_var(--primary)]">Start Demo Session</button>
+            </div>
+        `;
+
+        const tDiscussion = (title, question, hint) => `
+            <div class="flex flex-col items-center justify-center min-h-[60vh] text-center space-y-12 animate-in fade-in max-w-4xl mx-auto">
+                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-[0.4em] border border-white/10 px-4 py-1.5 rounded-full">Discussion</p>
+                <h2 class="title-font text-4xl md:text-5xl font-black text-white leading-tight ${document.body.classList.contains('theme-faith') ? 'italic text-primary' : ''}">${title}</h2>
+                <p class="text-3xl md:text-4xl text-white font-medium italic leading-relaxed mb-12">${question}</p>
+                <div class="w-full p-8 glass-panel border-l-4 border-primary mt-8 text-left">
+                    <p class="text-[10px] font-bold color-primary uppercase tracking-widest mb-4">Speaking Starters</p>
+                    <p class="text-lg text-gray-300 italic">"${hint}"</p>
+                </div>
+            </div>
+        `;
+
+        const tSlider = (prompt, optA, optB, starter) => `
+            <div class="flex flex-col items-center justify-center min-h-[60vh] text-center space-y-12 animate-in fade-in max-w-4xl mx-auto">
+                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-[0.4em] border border-white/10 px-4 py-1.5 rounded-full">Self Assessment</p>
+                <h2 class="title-font text-4xl md:text-5xl font-black text-white leading-tight">${prompt}</h2>
+                <div class="w-full glass-panel py-16 flex flex-col items-center mt-8">
+                    <div class="flex justify-between w-full px-8 mb-8 text-4xl"><span class="opacity-70">🔴</span><span class="opacity-70">🟢</span></div>
+                    <div class="w-full px-12"><input type="range" min="0" max="100" value="50" class="slider-input"></div>
+                    <div class="flex justify-between w-full px-8 mt-8 text-xs font-bold text-gray-400 uppercase tracking-widest">
+                        <span>${optA}</span><span>${optB}</span>
+                    </div>
+                </div>
+                <div class="w-full p-8 glass-panel border-l-4 border-primary mt-8 text-left">
+                    <p class="text-lg font-bold text-white mb-2">Discuss with your teacher:</p>
+                    <p class="text-sm color-primary font-bold mt-2">> "${starter}"</p>
+                </div>
+            </div>
+        `;
+
+        const tVideo = (title, videoId, instruction, start=0) => `
+            <div class="flex flex-col items-center py-10 animate-in fade-in max-w-5xl mx-auto">
+                <div class="text-center mb-10">
+                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-[0.4em] mb-4"><i class="fas fa-play-circle mr-2 color-primary"></i> Media Player</p>
+                    <h2 class="title-font text-5xl font-black text-white tracking-tight uppercase">${title}</h2>
+                </div>
+                <div class="glass-panel w-full flex flex-col items-center p-8 border-t-4 border-primary">
+                    <p class="text-lg text-white font-medium mb-8 text-center leading-relaxed">"${instruction}"</p>
+                    <div class="w-full aspect-video bg-black border border-white/10 shadow-2xl relative overflow-hidden rounded-xl">
+                        <iframe class="absolute inset-0 w-full h-full" src="https://www.youtube.com/embed/${videoId}?start=${start}&rel=0" frameborder="0" allowfullscreen></iframe>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        const tFixer = (title, lines, fixes) => {
+            let copy = [...fixes];
+            let html = lines.map(l => l.replace(/\[(.*?)\]/g, (m, w) => `<span class="bug-word" onclick="triggerFixer(this, '${copy.shift()}')">${w}</span>`)).join('<br><br>');
+            return `
+            <div class="flex flex-col items-center py-10 animate-in fade-in max-w-4xl mx-auto w-full">
+                <p class="text-[10px] font-bold text-[#ef4444] uppercase tracking-[0.4em] mb-4 bg-[#ef4444]/10 px-4 py-1.5 rounded animate-pulse">Error Detected</p>
+                <h2 class="title-font text-5xl font-black text-white tracking-tight mb-8 text-center uppercase">${title}</h2>
+                <p class="text-gray-400 text-lg mb-12 text-center">Click the red errors to fix the grammar.</p>
+                <div class="w-full glass-panel relative overflow-hidden text-2xl leading-relaxed text-gray-200 border-t-4 border-[#ef4444]">
+                    <div class="p-4">${html}</div>
+                    <div id="fix-panel" class="absolute bottom-0 left-0 w-full bg-black border-t-2 border-primary p-8 transform translate-y-full transition-transform duration-300 flex items-center gap-6 z-20">
+                        <span class="color-primary font-bold text-xl">> FIX:</span>
+                        <input type="text" id="fix-input" class="bg-[#111] text-white border border-white/20 rounded px-6 py-4 flex-1 text-xl focus:outline-none focus:border-primary" autocomplete="off">
+                        <button onclick="submitFixer()" class="btn-action px-8 py-3 text-sm">APPLY</button>
+                    </div>
+                </div>
+            </div>`;
+        }
+
+        const tFlipCards = (title, words) => {
+            const html = words.map(w => `
+                <div class="flip-card w-64" onclick="this.classList.toggle('flipped')">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front"><span class="font-bold text-white text-3xl mb-4 title-font ${document.body.classList.contains('theme-faith') ? 'italic' : ''}">${w.w}</span><span class="text-[10px] text-gray-500 mt-auto uppercase border border-gray-600 px-4 py-1.5 rounded-full">Reveal</span></div>
+                        <div class="flip-card-back flex flex-col justify-center items-center text-center"><p class="text-lg font-bold mb-3">${w.d}</p><p class="text-sm italic opacity-80">"${w.e}"</p></div>
+                    </div>
+                </div>`).join('');
+            return `
+            <div class="flex flex-col items-center py-10 animate-in fade-in max-w-6xl mx-auto">
+                <div class="text-center mb-16"><p class="text-[10px] font-bold color-primary uppercase tracking-[0.4em] mb-4">Glossary</p><h2 class="title-font text-5xl font-black text-white tracking-tight">${title}</h2></div>
+                <div class="flex flex-wrap justify-center gap-8">${html}</div>
+            </div>`;
+        }
+
+        const tGrammarSideBySide = (title, sub, col1, col2) => `
+            <div class="flex flex-col items-center justify-center h-full w-full max-w-5xl mx-auto p-8 animate-in fade-in text-center z-10">
+                <p class="text-[10px] font-bold color-primary uppercase tracking-[0.4em] mb-4">Grammar Core</p>
+                <h2 class="text-4xl title-font font-black mb-4 text-white uppercase tracking-widest">${title}</h2>
+                <p class="text-gray-400 mb-12 italic text-xl">${sub}</p>
+
+                <div class="flex flex-col md:flex-row gap-8 text-left w-full">
+                    <div class="flex-1 glass-panel border-t-4 border-primary">
+                        <p class="color-primary text-3xl font-bold mb-4 title-font">${col1.title}</p>
+                        <p class="text-gray-300 mb-6">${col1.desc}</p>
+                        <p class="text-xl text-white italic border-l-2 border-primary pl-4">"${col1.ex}"</p>
+                    </div>
+                    <div class="flex-1 glass-panel border-t-4 border-primary">
+                        <p class="color-primary text-3xl font-bold mb-4 title-font">${col2.title}</p>
+                        <p class="text-gray-300 mb-6">${col2.desc}</p>
+                        <p class="text-xl text-white italic border-l-2 border-primary pl-4">"${col2.ex}"</p>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        const tVitalsCheck = (id, prompt, options, correctIdx, followup, starter) => `
+            <div class="max-w-4xl mx-auto flex flex-col items-center justify-center min-h-[60vh] text-center space-y-12 animate-in fade-in">
+                <p class="text-[10px] font-bold color-primary uppercase tracking-[0.4em] mb-2 border border-white/10 px-4 py-1.5 rounded-full">Assessment</p>
+                <h2 class="title-font text-4xl md:text-5xl font-black text-white tracking-tight leading-tight">${prompt}</h2>
+                
+                <div class="w-full max-w-2xl space-y-4" id="quiz-options-${id}">
+                    ${options.map((opt, i) => `
+                        <div class="mcq-row locked-check" onclick="handleSimpleTrial(this, ${i === correctIdx}, '${id}')">
+                            <span class="text-2xl font-bold text-white">${opt}</span>
+                        </div>
+                    `).join('')}
+                </div>
+
+                <div id="fb-${id}" class="hidden w-full max-w-2xl p-8 glass-panel border-l-4 border-primary mt-8 text-left">
+                    <p class="text-[10px] font-bold color-primary uppercase tracking-widest mb-4">Doctor's Note</p>
+                    <p class="text-xl font-bold text-white mb-4">${followup}</p>
+                    <p class="text-sm color-primary font-bold">> "${starter}"</p>
+                </div>
+            </div>
+        `;
+
+        const tRoleplay = (title, prompt, hint) => `
+            <div class="flex flex-col items-center justify-center min-h-[60vh] text-center animate-in fade-in py-10 max-w-4xl mx-auto w-full">
+                <div class="w-24 h-24 bg-[#111] border border-white/20 rounded-full flex items-center justify-center mb-8"><i class="fas fa-microphone text-4xl text-white"></i></div>
+                <p class="text-[10px] font-bold color-primary uppercase tracking-[0.4em] mb-4">Live Roleplay</p>
+                <h2 class="title-font text-5xl md:text-6xl font-black tracking-tight text-white leading-tight mb-12">${prompt}</h2>
+                <div class="w-full glass-panel text-left">
+                    <div class="flex justify-between items-center cursor-pointer" onclick="this.nextElementSibling.classList.toggle('open')">
+                        <span class="text-white font-bold tracking-widest uppercase text-sm">Need help? (Hints)</span><i class="fas fa-chevron-down text-white/50"></i>
+                    </div>
+                    <div class="starter-content"><div class="bg-black/50 p-6 border-l-4 border-primary mt-4"><p class="text-xl font-medium text-white italic">"${hint}"</p></div></div>
+                </div>
+            </div>`;
+
+        const tCTA = () => `
+            <div class="flex flex-col items-center justify-center min-h-[70vh] text-center animate-in fade-in max-w-3xl mx-auto z-10">
+                <div class="w-32 h-32 rounded-full bg-primary/10 flex items-center justify-center text-6xl color-primary mb-10 border border-primary/30 shadow-[0_0_50px_rgba(0,0,0,0.3)]"><i class="fas fa-star"></i></div>
+                <h1 class="title-font text-5xl md:text-6xl font-black text-white mb-6 uppercase">Fim da Demonstração</h1>
+                <p class="text-xl text-gray-400 mb-12 leading-relaxed">Os seus alunos vão <b>adorar</b> esta experiência. A aula completa possui dezenas de etapas interativas de conversação, listening e gramática.</p>
+                <div class="flex gap-6">
+                    <button class="btn-action" onclick="alert('Esta ação redirecionará para o checkout/página de vendas no futuro.')">Desbloquear Aula Completa</button>
+                    <button class="btn-secondary" onclick="returnToLobby()">Voltar ao Lobby</button>
+                </div>
+            </div>`;
+
+        // --- LESSON DATA BUILDERS ---
+
+        const lessonFaith = {
+            title: "Wolfaith Engine", theme: "faith",
+            data: [
+                { type: TYPES.COVER, html: tCover("Mustard Seed Faith", "Learn Can, Could, and Imperatives through biblical teachings.", "A1 Beginner", "fa-cross") },
+                { type: TYPES.WARMUP, html: tDiscussion("Small Things", "Look at your hands. Can you see something tiny?", "Yes, I can see... / My ring is...") },
+                { type: TYPES.VOCAB, html: tFlipCards("Nature Vocabulary", [{w:"Seed", d:"A small object produced by a plant.", e:"A mustard seed is very small."}, {w:"Mountain", d:"A large natural elevation.", e:"The mountain is very high."}]) },
+                { type: TYPES.VIDEO, html: tVideo("The Teaching", "OE_34HQp6is", "Listen carefully. How does Jesus speak? Is He calm or angry?", 4) },
+                { type: TYPES.GRAMMAR, html: tGrammarSideBySide("Ability vs Possibility", "Understanding CAN and COULD.", {title: "CAN", desc: "Used for real abilities in the present.", ex: "I can walk. (I have legs)"}, {title: "COULD", desc: "Used for imaginary possibilities.", ex: "You could move a mountain. (It is possible)"}) },
+                { type: TYPES.CTA, html: tCTA() }
+            ]
+        };
+
+        const lessonNeuro = {
+            title: "The Sleep Clinic", theme: "neuro",
+            data: [
+                { type: TYPES.COVER, html: tCover("The Sleep Clinic", "Master Zero Conditional and Imperatives focusing on Neuroscience.", "A2 Pre-Intermediate", "fa-brain") },
+                { type: TYPES.WARMUP, html: tVitalsCheck('v1', "If you don't sleep, you ___ concentrate.", ["can't", "won't", "couldn't"], 0, "Is this a fact or a plan?", "It's a fact! Zero conditional.") },
+                { type: TYPES.VOCAB, html: tFlipCards("Clinical Terms", [{w:"Take a nap", d:"To sleep for a short time during the day.", e:"I usually take a nap on Sunday."}, {w:"Sleep on it", d:"To wait until the next day before deciding.", e:"I have a problem, I will sleep on it."}]) },
+                { type: TYPES.GRAMMAR, html: tGrammarSideBySide("Clinical Logic", "Facts vs Advice", {title: "Facts", desc: "If + Present, Present.", ex: "If you don't sleep, you get stressed."}, {title: "Advice", desc: "If + Present, Imperative.", ex: "If you feel tired, take a nap."}) },
+                { type: TYPES.DRILL, html: tFixer("Patient File", ["If Phil [not] sleep, he cannot concentrate.", "The doctor says: If you are stressed, [to take] a break."], ["doesn't", "take"]) },
+                { type: TYPES.CTA, html: tCTA() }
+            ]
+        };
+
+        const lessonExec = {
+            title: "The Executive Suite", theme: "exec",
+            data: [
+                { type: TYPES.COVER, html: tCover("The Hot Shot Rule", "Master Leadership and Past Modals of Regret.", "B2 Advanced", "fa-bullseye") },
+                { type: TYPES.WARMUP, html: tSlider("When a project fails, what is your first instinct?", "Make Excuses", "Take Accountability", "My first instinct is to...") },
+                { type: TYPES.VIDEO, html: tVideo("The TED Stage", "lKsvLGdoIH8", "Listen to Kat Cole explain her leadership framework.") },
+                { type: TYPES.DRILL, html: tFixer("The Apology Email", ["Team, the strategy failed.", "I [should listen] to your warnings.", "We [could finished] on time."], ["should have listened", "could have finished"]) },
+                { type: TYPES.SPEAKING, html: tRoleplay("The Confession Room", "You missed a major deadline. Apologize to the CEO using 'Should have'.", "I am sorry. I should have planned better. Next time...") },
+                { type: TYPES.CTA, html: tCTA() }
+            ]
+        };
+
+        // --- MINIGAME HELPERS ---
+        function handleSimpleTrial(el, isCorrect, id) {
+            if(el.classList.contains('locked')) return;
+            Array.from(el.parentElement.children).forEach(c => c.classList.add('locked', 'opacity-50'));
+            el.classList.remove('opacity-50');
+            if(isCorrect) { el.classList.add('correct'); document.getElementById('fb-'+id).classList.remove('hidden'); shootConfetti(); } 
+            else { el.classList.add('wrong'); }
+        }
+
+        let activeBug = null; let expectedFix = "";
+        function triggerFixer(el, ans) {
+            if(el.classList.contains('bug-fixed')) return;
+            activeBug = el; expectedFix = ans;
+            document.getElementById('fix-panel').classList.remove('translate-y-full');
+            document.getElementById('fix-input').value = ''; document.getElementById('fix-input').focus();
+        }
+        function submitFixer() {
+            const val = document.getElementById('fix-input').value.trim().toLowerCase();
+            if(val === expectedFix.toLowerCase()) {
+                activeBug.innerText = expectedFix; activeBug.className = 'bug-fixed';
+                document.getElementById('fix-panel').classList.add('translate-y-full');
+                if(document.querySelectorAll('.bug-word').length === 0) shootConfetti();
+            } else {
+                document.getElementById('fix-input').classList.add('shake', 'border-[#ef4444]');
+                setTimeout(() => document.getElementById('fix-input').classList.remove('shake', 'border-[#ef4444]'), 400);
+            }
+        }
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && document.getElementById('fix-input') === document.activeElement) submitFixer();
+        });
+
+        function shootConfetti() {
+            const cv = document.getElementById('confetti-canvas'); const ctx = cv.getContext('2d');
+            cv.width = window.innerWidth; cv.height = window.innerHeight;
+            const pieces = []; 
+            // Get current primary color from theme
+            const colorStr = getComputedStyle(document.body).getPropertyValue('--primary').trim();
+            const colors = [colorStr, '#FFFFFF', '#aaaaaa'];
+            for(let i=0; i<50; i++) pieces.push({ x: cv.width/2, y: cv.height/2+100, vx: (Math.random()-0.5)*20, vy: (Math.random()-1)*20-5, s: Math.random()*8+4, c: colors[Math.floor(Math.random()*colors.length)], r: Math.random()*360, rs: (Math.random()-0.5)*10 });
+            let id;
+            function run() {
+                ctx.clearRect(0, 0, cv.width, cv.height); let active = false;
+                pieces.forEach(p => {
+                    p.x+=p.vx; p.y+=p.vy; p.vy+=0.5; p.r+=p.rs; if(p.y<cv.height) active=true;
+                    ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.r*Math.PI/180); ctx.fillStyle=p.c; ctx.fillRect(-p.s/2,-p.s/2,p.s,p.s); ctx.restore();
+                });
+                if(active) id = requestAnimationFrame(run); else ctx.clearRect(0,0,cv.width,cv.height);
+            }
+            run();
+        }
+    </script>
+</body>
+</html>
